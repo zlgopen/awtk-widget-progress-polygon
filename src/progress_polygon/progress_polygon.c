@@ -23,23 +23,7 @@
 #include "tkc/utils.h"
 #include "progress_polygon.h"
 
-const char* tk_skip_chars(const char* p, const char* chars) {
-  return_value_if_fail(p != NULL && chars != NULL, p);
 
-  while (*p && strchr(chars, *p) != NULL) {
-    p++;
-  }
-  return p;
-}
-
-const char* tk_skip_to_chars(const char* p, const char* chars) {
-  return_value_if_fail(p != NULL && chars != NULL, p);
-
-  while (*p && strchr(chars, *p) == NULL) {
-    p++;
-  }
-  return p;
-}
 
 static uint32_t polygon_points_find(polygon_points_t* points, double value) {
   uint32_t i = 0;
