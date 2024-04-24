@@ -1,0 +1,14 @@
+<progress_polygon>
+  <style name="default" bg_color="#E0E0E0" fg_color="gold" border_color="green" border_width="2">
+    <normal />
+  </style>
+  <style name="image" bg_color="#E0E0E0" fg_image="image" border_color="green" border_width="2">
+    <normal />
+  </style>
+  <style name="image1" fg_image="fg_image1" bg_image="bg_image1" >
+    <normal />
+  </style>
+  <style name="image2" fg_image="fg_image2" bg_image="bg_image2" >
+    <normal />
+  </style>
+</progress_polygon>

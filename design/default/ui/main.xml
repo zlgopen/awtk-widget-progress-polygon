@@ -1,0 +1,32 @@
+<window theme="main" >
+  <view w="100%" h="50%" children_layout="default(r=4,c=2,s=10,m=10)">
+    <progress_polygon polygon="(0, 0, 0, 0, 1)(1, 1, 0, 1, 1)" value="40" style="image"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+    <progress_polygon polygon="(0, 0, 0.25, 0, 0.75)(0, 0.5, 0.25, 0.5, 0.75)(1, 1, 0, 1, 1)" value="40"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+    <progress_polygon polygon="(0, 0, 1, 0, 1)(1, 1, 0, 1, 1)" value="50"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+    <progress_polygon polygon="(0, 0, 0, 0, 0)(1, 1, 0, 1, 1)" value="60"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+    <progress_polygon polygon="(0, 0, 0.5, 0, 0.5)(1, 1, 0, 1, 1)" value="60"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+    <progress_polygon polygon="(0, 0, 0, 0, 1)(1, 1, 0.5, 1, 0.5)" value="60"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+    
+    <progress_polygon polygon="(0,0,0.5,0,1)(0.8,0.9,0.5,1,1)(1,0.9,0,1,0)" value="0"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+
+    <progress_polygon polygon="(0,0,0.5,0,1)(0.7,0.9,0.5,0.9,1)(0.8,0.9,0.5,1,1)(0.9,0.9,0.5,1,0.5)(1,0.9,0,1,0)" value="0"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+  </view>
+  <view y="50%" w="100%" h="50%">
+    <progress_polygon w="500" h="109" polygon="(0,0,0,0,1)(1,1,0,1,1)" value="40" style="image2"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" />
+    
+    <progress_polygon y="120" w="500" h="143" polygon="(0,0,0.58,0,1)(0.65,0.74,0.58,0.74,1)(0.7,0.78,0.58,0.84,1)
+      (0.8, 0.78, 0.5, 1, 1)(1, 0.87, 0, 1, 0)" value="0"
+      animation="value(from=0, to=100, yoyo_times=1000, duration=3000, easing=sin_inout)" style="image1"/>
+    
+  </view>
+  <button floating="true" x="r:10" y="b:10" w="80" h="30" name="close" text="Close"/>
+</window>
