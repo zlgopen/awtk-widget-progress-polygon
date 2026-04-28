@@ -101,6 +101,7 @@ typedef struct _progress_polygon_t {
 
   /*private*/
   polygon_points_t points;
+  double old_value;
 } progress_polygon_t;
 
 /**
