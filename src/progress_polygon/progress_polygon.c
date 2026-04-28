@@ -96,11 +96,92 @@ ret_t polygon_points_deinit(polygon_points_t* points) {
   return RET_OK;
 }
 
+ret_t caculate_point_by_value(widget_t* widget, double value, polygon_point_t* point) {
+  progress_polygon_t* progress_polygon = PROGRESS_POLYGON(widget);
+  return_value_if_fail(progress_polygon != NULL, RET_BAD_PARAMS);
+  double tmp_value = tk_clamp(value, progress_polygon->min, progress_polygon->max);
+  double progress = (tmp_value - progress_polygon->min) / (progress_polygon->max - progress_polygon->min);
+  uint32_t offset = polygon_points_find(&progress_polygon->points, progress);
+
+  polygon_point_t* next = progress_polygon->points.points + offset;
+  polygon_point_t* prev = offset > 0 ? progress_polygon->points.points + offset - 1 : next;
+  return_value_if_fail(next != NULL, RET_BAD_PARAMS);
+
+  if (prev != next) {
+    double interpolate = (progress - prev->value) / (next->value - prev->value);
+    point->value = progress;
+    point->x1 = prev->x1 + (next->x1 - prev->x1) * interpolate;
+    point->y1 = prev->y1 + (next->y1 - prev->y1) * interpolate;
+    point->x2 = prev->x2 + (next->x2 - prev->x2) * interpolate;
+    point->y2 = prev->y2 + (next->y2 - prev->y2) * interpolate;
+  } else {
+    point->value = next->value;
+    point->x1 = next->x1;
+    point->y1 = next->y1;
+    point->x2 = next->x2;
+    point->y2 = next->y2;
+  }
+  return RET_OK;
+}
+
+// 求最大值
+float max4_float(float a, float b, float c, float d) {
+    float max = a;
+    if (b > max) max = b;
+    if (c > max) max = c;
+    if (d > max) max = d;
+    return max;
+}
+
+// 求最小值
+float min4_float(float a, float b, float c, float d) {
+    float min = a;
+    if (b < min) min = b;
+    if (c < min) min = c;
+    if (d < min) min = d;
+    return min;
+}
+
 ret_t progress_polygon_set_value(widget_t* widget, double value) {
   progress_polygon_t* progress_polygon = PROGRESS_POLYGON(widget);
   return_value_if_fail(progress_polygon != NULL, RET_BAD_PARAMS);
 
-  progress_polygon->value = value;
+  if (progress_polygon->value != value) {
+    /* 分发值将要改变事件 */
+    value_change_event_t evt;
+    value_change_event_init(&evt, EVT_VALUE_WILL_CHANGE, widget);
+    value_set_uint32(&(evt.old_value), progress_polygon->value);
+    value_set_uint32(&(evt.new_value), value);
+    if (widget_dispatch(widget, (event_t*)&evt) != RET_STOP) {
+      progress_polygon->old_value = progress_polygon->value;
+      progress_polygon->value = value;
+      evt.e.type = EVT_VALUE_CHANGED;
+      /* 分发值已改变事件 */
+      widget_dispatch(widget, (event_t*)&evt);
+      polygon_point_t current_point;
+      polygon_point_t old_point;
+      if ((caculate_point_by_value(widget, progress_polygon->value, &current_point) == RET_OK) && 
+          (caculate_point_by_value(widget, progress_polygon->old_value, &old_point) == RET_OK))
+      {
+        rect_t rself;
+        float max_x = max4_float(current_point.x1, current_point.x2, old_point.x1, old_point.x2);
+        float max_y = max4_float(current_point.y1, current_point.y2, old_point.y1, old_point.y2);
+        float min_x = min4_float(current_point.x1, current_point.x2, old_point.x1, old_point.x2);
+        float min_y = min4_float(current_point.y1, current_point.y2, old_point.y1, old_point.y2);
+        int32_t w_max_x = max_x * widget->w;
+        int32_t w_max_y = max_y * widget->h;
+        int32_t w_min_x = min_x * widget->w;
+        int32_t w_min_y = min_y * widget->h;
+        rself = rect_init(w_min_x, w_min_y, w_max_x - w_min_x, w_max_y - w_min_y);
+        widget_invalidate_force(widget, &rself);
+        log_info("%d, %d, %d, %d. \r\n", w_min_x, w_min_y, w_max_x, w_max_y);
+      }
+      else 
+      {
+        widget_invalidate(widget, NULL);
+      }
+    }
+  }
 
   return RET_OK;
 }
